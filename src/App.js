@@ -17,7 +17,7 @@ class App extends Component {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Lil Pump
+            Lil Pump 2v
           </a>
         </header>
       </div>
