@@ -17,7 +17,7 @@ class App extends Component {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Hej Justin
+            Lil Pump
           </a>
         </header>
       </div>
