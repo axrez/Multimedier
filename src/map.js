@@ -5,6 +5,8 @@ import EventIcon from '@material-ui/icons/LocalPlay';
 import ParkingIcon from '@material-ui/icons/LocalParking';
 import OfferIcon from '@material-ui/icons/LocalOffer';
 import StoreIcon from '@material-ui/icons/StoreMallDirectory';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/ExpandMore';
 
 const apiKey = '';
 
@@ -48,6 +50,35 @@ const useStyles = makeStyles({
         border:'5px solid #fff',
         zIndex:21,
         position:'relative'
+    },
+    display:{
+        animation:"opening 1s linear 2s",
+        position:"absolute",
+        top:0,
+        left:0,
+        right:0,
+        bottom:0,
+        background:"#fff",
+        zIndex:100,
+        maxWidth:600,
+        margin:"auto",
+        textAlign:"center",
+        "& h3":{
+            fontSize: 46,
+            margin: '1rem 0',
+            fontWeight:500
+        },
+        "& h4":{
+            fontSize:26,
+            margin:'1.25rem 0',
+            fontWeight:400
+        },
+    },
+    nav:{
+        background:"#ccc",
+        padding:'6px 28px',
+        display:"flex",
+        justifyContent:"space-between"
     }
   });
 
@@ -67,12 +98,8 @@ const Marker = props => {
 const map = props => {
     const classes = useStyles();
     return(
-        <>
-            <div style={{}}>
-                <h3>Header</h3>
-                <h4>Subheader</h4>
-                <p>lorem25 </p>
-            </div>
+        <div className={classes.root}>
+            <Display classes={classes} />
             <div className={classes.mapContent}>
                 <GoogleMapReact
                     bootstrapURLKeys={{key:apiKey}}
@@ -89,8 +116,25 @@ const map = props => {
 
                 </GoogleMapReact>
             </div>
-        </>
+        </div>
     )
+}
+
+const Display = props => {
+    const {classes} = props;
+
+return(
+    <div className={classes.display}>
+        <div className={classes.nav}>
+            <IconButton>
+                <CloseIcon />
+            </IconButton>
+        </div>
+        <h3>Header</h3>
+        <h4>Subheader</h4>
+        <p>lorem25 </p>
+    </div>
+)
 }
 
 export default map;
