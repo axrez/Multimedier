@@ -5,15 +5,23 @@ import EventIcon from '@material-ui/icons/LocalPlay';
 import ParkingIcon from '@material-ui/icons/LocalParking';
 import OfferIcon from '@material-ui/icons/LocalOffer';
 import StoreIcon from '@material-ui/icons/StoreMallDirectory';
+import CafeIcon from '@material-ui/icons/LocalCafe';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/ExpandMore';
 import PlaceholderImage from './placeholder-image.png';
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 
-const apiKey = '';
+import Drawer from './drawer';
+
+const apiKey = 'AIzaSyAKYHrxqd8T3vIBnm3LrA5MWFfBt829EQ8';
 const googleMapDir = ({lat,lng}) => `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
 
 const _default = {
@@ -21,28 +29,40 @@ const _default = {
         lat: 55.405,
         lng: 11.355
     },
-    zoom: 16
+    zoom: 16.5
 }
-
 
 const markerTypes = {
     store:{
         icon:StoreIcon,
-        color:'#33f'
+        color:'#33f',
+        type:'store'
     },
     parking:{
         icon:ParkingIcon,
-        color:'#44c'
+        color:'#44c',
+        type: 'parking'
     },
     event:{
         icon:EventIcon,
-        color:'#f3f'
+        color:'#f3f',
+        type: 'event'
     },
     offer:{
         icon:OfferIcon,
-        color:'#ee3'
+        color:'#d6d60a',
+        type: 'offer'
+    },
+    cafe:{
+        icon:CafeIcon,
+        color:'#583b03',
+        type: 'cafe'
     }
 }
+
+
+//Menu
+// - lists of event&store/offer
 
 
 const skålImg = 'https://bentbrandt.imgix.net/11323521/11323521_1.jpg?max-h=75&max-w=400&modified=1900-01-01T00:00:00.0000000';
@@ -72,33 +92,130 @@ const Markers = [
                   ))}
                 </GridList>
               </div>),
-        lat: 55.4045,
-        lng:11.354,
+        lat: 55.4046037,
+        lng:11.3548422,
         image:'https://lh5.googleusercontent.com/p/AF1QipNgkUS-_0rJyBHKgtZc98nqUg6hHIoCO2Z2Miid=w408-h306-k-no'
     },
     {
+        ...markerTypes.store,
+        header:'H&M',
+        address:'Nytorv 9L, Slagelse',
+        openingHours:'10:00 - 18:00',
+        lat:55.4049316,
+        lng:11.3546833,
+        image:'https://lh5.googleusercontent.com/p/AF1QipMBo0kLQGCJf9vyiPTTiuYaFYlQfFKN6aqsJZni=w426-h240-k-no'
+    },
+    {
+        ...markerTypes.store,
+        header:'Rådhuspladsen Ure og Guld',
+        address:'Rådhuspladsen 1, Slagelse',
+        openingHours:'9:30 - 18:00',
+        lat:55.404662,
+        lng:11.3561981,
+        image:'https://lh5.googleusercontent.com/p/AF1QipNmuEHPqQ_zhcnEjLwwur_XvTUzbNJPrgHQEIwV=w408-h408-k-no'
+    },
+    {
+        ...markerTypes.store,
+        header:'Matas',
+        address:'Nytorv 4, Slagelse',
+        openingHours:'10:00 - 18:00',
+        lat:55.4038206,
+        lng:11.355923,
+        image:'https://lh5.googleusercontent.com/p/AF1QipN7QxDC5_sgz2qqg9N1yuk3aykJDwqNTFZjNAXL=w408-h306-k-no'
+    },
+    {
         ...markerTypes.parking,
-        header:'Parking',
-        body:'250 parkingspots!',
-        lat: 55.405,
-        lng:11.358,
+        header:'Parkeringsplads',
+        address:'Østerbro 4B, Slagelse',
+        lat: 55.4071611,
+        lng:11.3549093,
+        image:'https://geo3.ggpht.com/cbk?panoid=gB8WKIk0X3X6B7Ej5bmkyg&output=thumbnail&cb_client=search.TACTILE.gps&thumb=2&w=408&h=240&yaw=263.39462&pitch=0&thumbfov=100'
+    },
+    {
+        ...markerTypes.parking,
+        header:'Rådhuspladsen',
+        address:'Rådhuspladsen, Slagelse',
+        lat: 55.4050892,
+        lng:11.3567302,
+        image:'https://lh5.googleusercontent.com/p/AF1QipNIJRxDnvIrDY6OCtbScEClbPjURFhQJ2xhXzrC=w426-h240-k-no'
+    },
+    {
+        ...markerTypes.parking,
+        header:'Parkeringsplads',
+        address:'Træskogården 2, Slagelse',
+        lat: 55.405955,
+        lng:11.3519199
+    },
+    {
+        ...markerTypes.event,
+        header:'OplevelsesTorvet – med naturen i fokus',
+        body:'Der er fokus på naturen og forskellige typer af naturoplevelser, når Forskningens Døgn rykker ind i VestsjællandsCentret fredag den 26. april.',
+        address:'VestsjællandsCentret 10, Slagelse',
+        lat: 55.4062739,
+        lng:11.3547145,
         image:PlaceholderImage
     },
     {
         ...markerTypes.event,
-        header:'Big event!',
-        body:'Price: 5kr',
-        lat: 55.407,
-        lng:11.354,
-        image:PlaceholderImage
+        header:'Panorama Biograferne',
+        address:'Træskogården 2, Slagelse',
+        lat: 55.4061071,
+        lng:11.35154,
+        image:'https://lh5.googleusercontent.com/p/AF1QipP-Wq1rV3VxXVAadt5jfN9705eH4gSfbM-dIZ0B=w408-h725-k-no'
+    },
+    {
+        ...markerTypes.event,
+        header:'Lystanlægget Slagelse',
+        address:'Parkvej, Slagelse',
+        lat: 55.401601,
+        lng:11.3602205,
+        image:'https://lh5.googleusercontent.com/p/AF1QipMSAqMsuVjmCJ0DJ23zjjQLf60Uijo4_AP8Bud_=w426-h240-k-no'
     },
     {
         ...markerTypes.offer,
-        header:'Best Offer!',
-        body:'Discount: 100%',
+        header:'Bog & idé',
+        body:'20% rabat på alle bog',
+        openingHours:'10:00 - 19:00',
+        address:'Jernbanegade 10a, st 10, Slagelse',
         lat: 55.406,
         lng:11.3555,
-        image:PlaceholderImage
+        image:'https://lh5.googleusercontent.com/p/AF1QipMUwMi2hGqj7phvFDXXCg4pTHPHkrMYhgCZz-4C=w410-h240-k-no'
+    },
+    {
+        ...markerTypes.cafe,
+        header:'Café Vivaldi',
+        openingHours:'10:00 - 22:00',
+        address:'Rosengade 6, Slagelse',
+        lat:55.4036746,
+        lng:11.3537165,
+        image:'https://lh5.googleusercontent.com/p/AF1QipOFP5WTVMbad8VdvCog3qDNZ9ipedswdYb6uVM-=w530-h240-k-no'
+    },
+    {
+        ...markerTypes.cafe,
+        header:'Cafe Bella',
+        openingHours:'11:00 - 22:00',
+        address:'Casinotorvet 4 E, Slagelse',
+        lat: 55.4054047,
+        lng:11.3545352,
+        image:'https://lh5.googleusercontent.com/p/AF1QipNDc5AUfg0KXFP0EBKPk9jNfCA9JZUqjGHPWWOT=w408-h306-k-no'
+    },
+    {
+        ...markerTypes.cafe,
+        header:'Café ZigZag',
+        openingHours:'9:30 - 22:00',
+        address:'Schweizerpladsen 3, Slagelse',
+        lat: 55.4045019,
+        lng:11.353177,
+        image:'https://lh5.googleusercontent.com/p/AF1QipMsk-F09UUTtJrHrAuQnbvwflGGCztjSoamyKfS=w408-h272-k-no'
+    },
+    {
+        ...markerTypes.cafe,
+        header:'Café Caramel',
+        openingHours:'9:30 - 22:00',
+        address:'Schweizerpladsen 1B, Slagelse',
+        lat: 55.4043275,
+        lng:11.3531098,
+        image:'https://lh5.googleusercontent.com/p/AF1QipOS9aX3I571VZgjrfgbZY-_y6eca5Gz19aAQX7q=w408-h272-k-no'
     },
 ]
 
@@ -111,7 +228,7 @@ const useStyles = makeStyles(theme => ({
     },
     markerRoot:{
         position:"relative",
-        transform: 'translateY(-55px)'
+        transform: 'translate(-23px,-55px)'
     },
     locationMarker:{
         width:14,
@@ -161,7 +278,8 @@ const useStyles = makeStyles(theme => ({
     nav:{
         padding:'6px 28px',
         display:"flex",
-        justifyContent:"space-between"
+        justifyContent:"space-between",
+        alignItems: 'center'
     },
     displayHeader:{
         fontSize:32,
@@ -186,9 +304,13 @@ const useStyles = makeStyles(theme => ({
         fontSize: 21,
         // borderRadius:'32px',
         textDecoration: 'none',
+        display:'block',
         // margin:'auto',
         // color:'#fff',   
         // background:'#33f',
+        '& small':{
+            whiteSpace: 'nowrap'
+        }
     },
     displayContent:{
         padding: 24
@@ -269,8 +391,21 @@ const map = props => {
         setDisplay(e);   
     }
 
+    const ShowDisplayList = ({name,type}) => {
+        const arr = Markers.filter(e => e.type === type);
+        setDisplay({
+            header:name,
+            body:<List>
+                {arr.map(e => <ListItem button >
+                    <ListItemText primary={e.header} secondary={e.address} onClick={ShowDisplay(e)} />
+                </ListItem>)}
+            </List>
+        })
+    }
+
     return(
         <div className={classes.root}>
+            <Drawer onClick={ShowDisplayList} />
             {display &&
                 <Display
                     item={display}
@@ -279,6 +414,7 @@ const map = props => {
                     />}
             <div className={classes.mapContent}>
                 <GoogleMapReact
+                    yesIWantToUseGoogleMapApiInternals 
                     bootstrapURLKeys={{key:apiKey}}
                     defaultCenter={_default.center}
                     defaultZoom={_default.zoom}
@@ -311,15 +447,17 @@ const Display = props => {
         <div className={classes.display}>
             <div className={classes.nav}>
                 <h3 className={classes.displayHeader}>{header}</h3>
-                <IconButton onClick={props.onClose}>
-                    <CloseIcon />
-                </IconButton>
+                <div>
+                    <IconButton onClick={props.onClose}>
+                        <CloseIcon />
+                    </IconButton>
+                </div>
             </div>
             
             {item.image && <img className={classes.displayImage} src={item.image} alt="display" />}
             <div className={classes.displayContent}>
-                <a className={classes.directionButton} target='_blank' rel="noopener noreferrer" href={googleMapDir(item)}>{item.address}</a>
-                <p>Åbningstid: {item.openingHours}</p>
+                {item.address && <a className={classes.directionButton} target='_blank' rel="noopener noreferrer" href={googleMapDir(item)}>{item.address} <small>(Vis vej)</small></a>}
+                {item.openingHours && <p>Åbningstid: {item.openingHours}</p>}
                 {typeof(body) == 'function' ? body(classes) : body}
             </div>
         </div>
