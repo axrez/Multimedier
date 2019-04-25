@@ -9,6 +9,10 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/ExpandMore';
 import PlaceholderImage from './placeholder-image.png';
 
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
+
 const apiKey = '';
 const googleMapDir = ({lat,lng}) => `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
 
@@ -40,20 +44,41 @@ const markerTypes = {
     }
 }
 
+
+const skålImg = 'https://bentbrandt.imgix.net/11323521/11323521_1.jpg?max-h=75&max-w=400&modified=1900-01-01T00:00:00.0000000';
+const kopImg = 'https://shop0851.hstatic.dk/upload_dir/shop/kop-chubby-chubbykop-blaa.jpg';
+const kandeImg = 'https://www.royalcopenhagen.com/rc/mediaweb/?context=cmN8aW1hZ2VzfDQyMjc5MHxpbWFnZS9wbmd8aW1hZ2VzL2g2Zi9oMTEvODgwNDU5ODQ4MDkyNi5wbmd8YTI0ZDY3NDc2MTFhYzM3NTUwOTUxODhmYmNhNDFlZTYxZWQzZTkzNWMzOTE1ZTc4MTNhMmNmZDA0ZTc4MGQyZA';
+
 const Markers = [
     {
         ...markerTypes.store,
-        header:'Shop',
-        subheader:'The best shop',
-        body:'Swag shop, buy for big money',
-        lat: 55.405,
-        lng:11.355,
-        image:PlaceholderImage
+        header:'Bahne',
+        address:'Galleriet Slagelse, Nytorv 9D',
+        openingHours: '8:00 - 16:00',
+        body: classes =>
+            (<div className={classes.grid}>
+                <GridList className={classes.gridList}>
+                  {[{img:skålImg,title:'SKÅL!!!'},{img:kopImg,title:'KOP!!!'},{img:kandeImg,title:'KANDE!!!'}].map(tile => (
+                    <GridListTile key={tile.img}>
+                      <img src={tile.img} alt={tile.title} />
+                      <GridListTileBar
+                        title={tile.title}
+                        classes={{
+                          root: classes.titleBar,
+                          title: classes.title,
+                        }}
+                      />
+                    </GridListTile>
+                  ))}
+                </GridList>
+              </div>),
+        lat: 55.4045,
+        lng:11.354,
+        image:'https://lh5.googleusercontent.com/p/AF1QipNgkUS-_0rJyBHKgtZc98nqUg6hHIoCO2Z2Miid=w408-h306-k-no'
     },
     {
         ...markerTypes.parking,
         header:'Parking',
-        subheader:'Parking for all!',
         body:'250 parkingspots!',
         lat: 55.405,
         lng:11.358,
@@ -62,7 +87,6 @@ const Markers = [
     {
         ...markerTypes.event,
         header:'Big event!',
-        subheader:'Best event i the world!!!',
         body:'Price: 5kr',
         lat: 55.407,
         lng:11.354,
@@ -71,7 +95,6 @@ const Markers = [
     {
         ...markerTypes.offer,
         header:'Best Offer!',
-        subheader:'- 100%, all is FREE!',
         body:'Discount: 100%',
         lat: 55.406,
         lng:11.3555,
@@ -79,7 +102,7 @@ const Markers = [
     },
 ]
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     root: {
     },
     mapContent:{
@@ -129,12 +152,6 @@ const useStyles = makeStyles({
         zIndex:100,
         maxWidth:600,
         margin:"auto",
-        textAlign:"center",
-        "& h3":{
-            fontSize: 46,
-            margin: '1rem 0',
-            fontWeight:500
-        },
         "& h4":{
             fontSize:26,
             margin:'1.25rem 0',
@@ -142,14 +159,19 @@ const useStyles = makeStyles({
         },
     },
     nav:{
-        background:"#00000022",
         padding:'6px 28px',
         display:"flex",
-        justifyContent:"flex-end"
+        justifyContent:"space-between"
+    },
+    displayHeader:{
+        fontSize:32,
+        margin: '1rem 0',
+        fontWeight:400
     },
     displayImage:{
-        maxWidth:'100%',
-        margin:'auto'
+        height: 300,
+        objectFit: 'cover',
+        width: '100%'
     },
     displayFooter:{
         position:'absolute',
@@ -159,24 +181,49 @@ const useStyles = makeStyles({
         padding:15
     },
     directionButton:{
-        display:'inline-block',
-        padding: '16px 42px',
+        // display:'inline-block',
+        // padding: '16px 42px',
         fontSize: 21,
-        borderRadius:'32px',
+        // borderRadius:'32px',
         textDecoration: 'none',
-        margin:'auto',
-        color:'#fff',   
-        background:'#33f',
+        // margin:'auto',
+        // color:'#fff',   
+        // background:'#33f',
+    },
+    displayContent:{
+        padding: 24
+    },
+
+    grid: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        overflow: 'hidden',
+        // backgroundColor: theme.palette.background.paper,
+    },
+    gridList: {
+        'ul&':{
+            flexWrap: 'nowrap',
+            // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+            transform: 'translateZ(0)',
+        }
+    },
+    title: {
+        // color: theme.palette.primary.light,
+      },
+      titleBar: {
+        background:
+          'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
     }
-  });
+  }));
 
 const Marker = props => {
     const {classes} = props;
 
-    return(
+    return (
         <div className={classes.markerRoot} onClick={props.onClick}>
-            <div className={classes.markerArrow} style={{background: props.color}} />
-            <div className={classes.markerCircle} style={{color:props.color, borderColor:props.color,}}>
+            <div className={classes.markerArrow} style={{ background: props.color }} />
+            <div className={classes.markerCircle} style={{ color: props.color, borderColor: props.color, }}>
                 <props.icon color='inherit' />
             </div>
         </div>
@@ -258,21 +305,22 @@ const map = props => {
 
 const Display = props => {
     const {classes,item} = props;
-    const {header,subheader,body} = item;
+    const {header,body} = item;
 
     return(
         <div className={classes.display}>
             <div className={classes.nav}>
+                <h3 className={classes.displayHeader}>{header}</h3>
                 <IconButton onClick={props.onClose}>
                     <CloseIcon />
                 </IconButton>
             </div>
-            <h3>{header}</h3>
-            <h4>{subheader}</h4>
+            
             {item.image && <img className={classes.displayImage} src={item.image} alt="display" />}
-            <p>{body}</p>
-            <div className={classes.displayFooter}>
-                <a className={classes.directionButton} target='_blank' rel="noopener noreferrer" href={googleMapDir(item)}>Get directions</a>
+            <div className={classes.displayContent}>
+                <a className={classes.directionButton} target='_blank' rel="noopener noreferrer" href={googleMapDir(item)}>{item.address}</a>
+                <p>Åbningstid: {item.openingHours}</p>
+                {typeof(body) == 'function' ? body(classes) : body}
             </div>
         </div>
     )
